@@ -10,3 +10,16 @@
 /.vs/ProjectEvaluation
 /bin/Debug/net8.0
 /obj
+/AccountEventHandler/bin/Debug/net8.0
+/AccountEventHandler/obj/Debug/net8.0
+/AccountEventHandler/obj
+/AccountEvents/bin/Debug/net8.0
+/AccountEvents/obj
+/AccountModel/bin/Debug/net8.0
+/AccountModel/obj
+/AccountService/bin/Debug/net8.0
+/AccountService/obj
+/EventOrderingTest/bin/Debug/net8.0
+/EventOrderingTest/obj
+/EventOrderingTests/obj
+/EventOrderingTests
