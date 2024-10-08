@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/EventOrdering/copilot-chat/a2f1debe/sessions
+/.vs/EventOrdering/DesignTimeBuild
+/.vs/EventOrdering/FileContentIndex
+/.vs/EventOrdering/v17/TestStore/0
+/.vs/EventOrdering/v17
+/.vs/ProjectEvaluation
+/bin/Debug/net8.0
+/obj
