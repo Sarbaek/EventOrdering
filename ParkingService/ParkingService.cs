@@ -4,7 +4,7 @@ namespace EventOrdering
 {
     public class ParkingService(ITracingService tracingService): IParkingService
     {
-        public ConcurrentDictionary<(int, EventType), AccountEvent> ParkedEvents { get; set; } = new ConcurrentDictionary<(int, EventType), AccountEvent>();
+        public static ConcurrentDictionary<(int, EventType), AccountEvent> ParkedEvents { get; set; } = new ConcurrentDictionary<(int, EventType), AccountEvent>();
         protected ITracingService TracingService { get; set; } = tracingService;
 
         public void ParkEvent(int id, EventType eventToWaitFor, AccountEvent accountEvent)

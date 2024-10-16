@@ -10,7 +10,7 @@ namespace EventOrdering
 
         public void HandleAccountOpenedEvent(AccountEvent accountOpenedEvent)
         {
-            if (!ValidateAccountExists(accountOpenedEvent.Id, out _))
+            if (ValidateAccountExists(accountOpenedEvent.Id, out _))
             {
                 TracingService.LogError($"Received account opened event but account already exists. Id: {accountOpenedEvent.Id}", GetType().Name);
                 return;

@@ -5,15 +5,17 @@ namespace EventOrdering
 {
     public class AccountService(ITracingService tracingService) : IAccountService
     {
-        protected ConcurrentDictionary<int, Account> AccountRepository { get; set; } = [];
+        protected static ConcurrentDictionary<int, Account> AccountRepository { get; set; } = [];
         protected ITracingService TracingService { get; set; } = tracingService;
 
         public void AddAccount(Account account)
         {
             lock (AccountRepository)
             {
+                TracingService.LogTrace($"Adding Account with id: {account.Id}", GetType().Name);
                 AccountRepository.TryAdd(account.Id, account);
             }
+            LogState();
         }
 
         public void CloseAccount(Account account)
@@ -33,7 +35,7 @@ namespace EventOrdering
             AccountRepository.TryGetValue(account.Id, out var existingItem);
             if(existingItem == null)
             {
-                TracingService.LogError($"Account with id: {account.Id} does not exist, cannot update", this.GetType().Name);
+                TracingService.LogError($"Account with id: {account.Id} does not exist, cannot update", GetType().Name);
                 return;
             }
             lock (AccountRepository)
@@ -49,8 +51,16 @@ namespace EventOrdering
             {
                 return account;
             }
-            TracingService.LogTrace($"Account with id {id} not found", this.GetType().Name);
+            TracingService.LogTrace($"Account with id {id} not found", GetType().Name);
             return null;
+        }
+
+        protected void LogState()
+        {
+            foreach (var account in AccountRepository.Values)
+            {
+                Console.WriteLine(account);
+            }
         }
     }
 }
