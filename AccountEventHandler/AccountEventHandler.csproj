@@ -10,6 +10,7 @@
     <ProjectReference Include="..\AccountEvents\AccountEvents.csproj" />
     <ProjectReference Include="..\AccountModel\AccountModel.csproj" />
     <ProjectReference Include="..\AccountService\AccountService.csproj" />
+    <ProjectReference Include="..\TracingService\TracingService.csproj" />
   </ItemGroup>
 
 </Project>

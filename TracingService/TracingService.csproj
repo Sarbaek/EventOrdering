@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AccountModel\AccountModel.csproj" />
-    <ProjectReference Include="..\TracingService\TracingService.csproj" />
-  </ItemGroup>
-
 </Project>

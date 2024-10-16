@@ -7,8 +7,10 @@ namespace EventOrdering
         void AddAccount(Account account);
         void UpdateAccount(Account account);
 
-        void SettleAccount(int id);
+        void SettleAccount(Account account);
 
-        void CloseAccount(int id);
+        void CloseAccount(Account account);
+
+        Account? GetAccount(int id);
     }
 }

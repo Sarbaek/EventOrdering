@@ -2,8 +2,9 @@ namespace EventOrdering
 {
     public interface IAccountEventHandler
     {
-        void HandleAccountCreatedEvent(AccountEvent accountCreatedEvent);
+        void HandleAccountOpenedEvent(AccountEvent accountOpenedEvent);
         void HandleAccountUpdatedEvent(AccountEvent accountUpdatedEvent);
         void HandleAccountSettledEvent(AccountEvent accountSettledEvent);
+        void HandleAccountClosedEvent(AccountEvent accountClosedEvent);
     }
 }
