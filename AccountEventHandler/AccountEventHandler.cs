@@ -2,16 +2,17 @@
 
 namespace EventOrdering
 {
-    public class AccountEventHandler(IAccountService accountService, ITracingService tracingService) : IAccountEventHandler
+    public class AccountEventHandler(IAccountService accountService, ITracingService tracingService, IParkingService parkingService) : IAccountEventHandler
     {
         public IAccountService AccountService { get; set; } = accountService;
         public ITracingService TracingService { get; set; } = tracingService;
+        public IParkingService ParkingService { get; set; } = parkingService;
 
         public void HandleAccountOpenedEvent(AccountEvent accountOpenedEvent)
         {
             if (!ValidateAccountExists(accountOpenedEvent.Id, out _))
             {
-                TracingService.LogError($"Received account opened event but account already exists. Id: {accountOpenedEvent.Id}", this.GetType().Name);
+                TracingService.LogError($"Received account opened event but account already exists. Id: {accountOpenedEvent.Id}", GetType().Name);
                 return;
             }
 
@@ -26,7 +27,14 @@ namespace EventOrdering
                 
             AccountService.AddAccount(account);
 
-            //TODO: Unpark waiting events
+            //Unpark waiting events
+            var parkedEvent = ParkingService.UnparkEvent(accountOpenedEvent.Id, EventType.AccountOpened);
+            if (parkedEvent == null)
+            {
+                TracingService.LogTrace("No parked events found, continuing processing events", GetType().Name);
+                return;
+            }
+            HandleParkedEvent(parkedEvent);
         }
 
         public void HandleAccountUpdatedEvent(AccountEvent accountUpdatedEvent)
@@ -36,15 +44,15 @@ namespace EventOrdering
             // Handle update event arriving before opened event
             if (!ValidateAccountExists(accountUpdatedEvent.Id, out var account))
             {
-                TracingService.LogError($"Account with id: {accountUpdatedEvent.Id} does not exist, parking event until account opened event arrives", this.GetType().Name);
-                //TODO: Create parkingservice
+                TracingService.LogError($"Account with id: {accountUpdatedEvent.Id} does not exist, parking event until account opened event arrives", GetType().Name);
+                ParkingService.ParkEvent(accountUpdatedEvent.Id, EventType.AccountOpened, accountUpdatedEvent);
                 return;
             }
 
             // Handle update event arriving late to the party
             if(account?.LatestChange > accountUpdatedEvent.EventReceived)
             {
-                TracingService.LogError($"Account with id: {accountUpdatedEvent.Id} already updated by later event, no more work needed", this.GetType().Name);
+                TracingService.LogError($"Account with id: {accountUpdatedEvent.Id} already updated by later event, no more work needed", GetType().Name);
                 return;
             }
 
@@ -66,8 +74,9 @@ namespace EventOrdering
         {
             if (!ValidateAccountExists(accountSettledEvent.Id, out _))
             {
-                TracingService.LogTrace($"Account with id: {accountSettledEvent.Id} not found, park event until account exists", this.GetType().Name);
-                // TODO: Park event
+                TracingService.LogTrace($"Account with id: {accountSettledEvent.Id} not found, park event until account exists", GetType().Name);
+                ParkingService.ParkEvent(accountSettledEvent.Id, EventType.AccountOpened, accountSettledEvent);
+                return;
             }
 
             // Account cannot be in status settled or closed before the first settled event so no need to check for anything further
@@ -81,21 +90,32 @@ namespace EventOrdering
             };
             AccountService.SettleAccount(newAccount);
 
-            //TODO: Unpark waiting events
+            //Unpark waiting events
+            var parkedEvent = ParkingService.UnparkEvent(accountSettledEvent.Id, EventType.AccountSettled);
+            if (parkedEvent == null)
+            {
+                TracingService.LogTrace("No parked events found, continuing processing events", GetType().Name);
+                return;
+            }
+            HandleParkedEvent(parkedEvent);
         }
 
         public void HandleAccountClosedEvent(AccountEvent accountClosedEvent)
         {
             if (!ValidateAccountExists(accountClosedEvent.Id, out var account))
             {
-                TracingService.LogTrace($"Account with id: {accountClosedEvent.Id} not found, park event until account exists", this.GetType().Name);
-                // TODO: Park event
+                TracingService.LogTrace($"Account with id: {accountClosedEvent.Id} not found, park event until account exists", GetType().Name);
+                // Park event until AccountOpened event arrives
+                ParkingService.ParkEvent(accountClosedEvent.Id, EventType.AccountOpened, accountClosedEvent);
+                return;
             }
 
             if(account?.AccountStatus != AccountStatus.Settled)
             {
-                TracingService.LogTrace($"Account with id: {accountClosedEvent.Id} is not settled yet, park event until account is settled", this.GetType().Name);
-                // TODO: Park event
+                TracingService.LogTrace($"Account with id: {accountClosedEvent.Id} is not settled yet, park event until account is settled", GetType().Name);
+                // Park even until AccountSettled event arrives
+                ParkingService.ParkEvent(accountClosedEvent.Id, EventType.AccountSettled, accountClosedEvent);
+                return;
             }
 
             Account newAccount = new()
@@ -140,6 +160,28 @@ namespace EventOrdering
                 default:
                     return CurrencyCode.USD;
                     
+            }
+        }
+
+        protected void HandleParkedEvent(AccountEvent parkedEvent)
+        {
+            switch (parkedEvent.EventType)
+            {
+                case EventType.AccountOpened:
+                    HandleAccountOpenedEvent(parkedEvent);
+                    break;
+                case EventType.AccountClosed:
+                    HandleAccountClosedEvent(parkedEvent);
+                    break;
+                case EventType.AccountUpdated:
+                    HandleAccountUpdatedEvent(parkedEvent);
+                    break;
+                case EventType.AccountSettled:
+                    HandleAccountSettledEvent(parkedEvent);
+                    break;
+                default:
+                    TracingService.LogError("Parked event type not found", GetType().Name);
+                    break;
             }
         }
     }

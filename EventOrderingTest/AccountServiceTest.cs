@@ -8,14 +8,45 @@ namespace EventOrdering
         public void Add_ShouldSaveDataInRepo()
         {
             // Arrange
-            var accountService = new AccountService(new TracingService());
-            //var account = new Account(1, "Test", CurrencyCode.DKK, AccountStatus.Active);
-
+            
             // Act
-            //accountService.AddAccount(account);
-
+            
             // Assert
-            //Assert.Equal(account, accountService.AccountRepository[1]);
+        }
+
+        [Fact]
+        public void Update_ShouldUpdateDataInRepo()
+        {
+
+        }
+
+        [Fact]
+        public void Update_ShouldWaitForCreateEvent()
+        {
+
+        }
+
+        [Fact]
+        public void Settle_ShouldWaitForCreateEvent()
+        {
+
+        }
+
+        [Fact]
+        public void Settle_ShouldSettleAccount()
+        {
+
+        }
+
+        [Fact]
+        public void Close_ShouldWaitForSettleEvent()
+        {
+
+        }
+
+        [Fact]
+        public void Close_ShouldCloseAccount()
+        {
 
         }
     }

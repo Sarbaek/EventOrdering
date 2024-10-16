@@ -10,17 +10,22 @@ namespace EventOrdering
 
         public void AddAccount(Account account)
         {
-            AccountRepository.TryAdd(account.Id, account);
+            lock (AccountRepository)
+            {
+                AccountRepository.TryAdd(account.Id, account);
+            }
         }
 
         public void CloseAccount(Account account)
         {
-            //throw new NotImplementedException();
+            account.AccountStatus = AccountStatus.Closed;
+            UpdateAccount(account);
         }
 
         public void SettleAccount(Account account)
         {
-            //throw new NotImplementedException();
+            account.AccountStatus = AccountStatus.Settled;
+            UpdateAccount(account);
         }
 
         public void UpdateAccount(Account account)
@@ -31,7 +36,10 @@ namespace EventOrdering
                 TracingService.LogError($"Account with id: {account.Id} does not exist, cannot update", this.GetType().Name);
                 return;
             }
-            AccountRepository.TryUpdate(account.Id, account, existingItem);
+            lock (AccountRepository)
+            {
+                AccountRepository.TryUpdate(account.Id, account, existingItem);
+            }
         }
 
         public Account? GetAccount(int id)

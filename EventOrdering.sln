@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventOrderingTest", "EventO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventOrdering", "EventOrdering\EventOrdering.csproj", "{34E539E6-33DE-4EB5-A6B4-6D545AA251A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracingService", "TracingService\TracingService.csproj", "{CA705DCF-4B6A-48DC-B1B9-4D80871A5530}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TracingService", "TracingService\TracingService.csproj", "{CA705DCF-4B6A-48DC-B1B9-4D80871A5530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingService", "ParkingService\ParkingService.csproj", "{C64CE3FA-D99B-422B-82F3-462AD3BBC843}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{CA705DCF-4B6A-48DC-B1B9-4D80871A5530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA705DCF-4B6A-48DC-B1B9-4D80871A5530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA705DCF-4B6A-48DC-B1B9-4D80871A5530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C64CE3FA-D99B-422B-82F3-462AD3BBC843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C64CE3FA-D99B-422B-82F3-462AD3BBC843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C64CE3FA-D99B-422B-82F3-462AD3BBC843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C64CE3FA-D99B-422B-82F3-462AD3BBC843}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

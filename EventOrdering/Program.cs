@@ -8,9 +8,10 @@ HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 var services = new ServiceCollection();
 
 // Register required services for DI
-services.AddSingleton<IAccountService, AccountService>();
-services.AddSingleton<IAccountEventHandler, AccountEventHandler>();
 services.AddSingleton<ITracingService, TracingService>();
+services.AddSingleton<IAccountService, AccountService>();
+services.AddSingleton<IParkingService, ParkingService>();
+services.AddSingleton<IAccountEventHandler, AccountEventHandler>();
 
 var serviceProvider = services.BuildServiceProvider();
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EventOrdering
+﻿namespace EventOrdering
 {
     public static class EventHandlerTask
     {
@@ -18,19 +12,19 @@ namespace EventOrdering
                 switch (e.EventType)
                 {
                     case EventType.AccountOpened:
-                        tracingService.LogTrace($"Handling event of type: ${e.EventType}", podName);
+                        tracingService.LogTrace($"Handling event of type: {e.EventType}", podName);
                         accountEventHandler.HandleAccountOpenedEvent(MapEvent(e, tracingService));
                         break;
                     case EventType.AccountUpdated:
-                        tracingService.LogTrace($"Handling event of type: ${e.EventType}", podName);
+                        tracingService.LogTrace($"Handling event of type: {e.EventType}", podName);
                         accountEventHandler.HandleAccountUpdatedEvent(MapEvent(e, tracingService));
                         break;
                     case EventType.AccountSettled:
-                        tracingService.LogTrace($"Handling event of type: ${e.EventType}", podName);
+                        tracingService.LogTrace($"Handling event of type: {e.EventType}", podName);
                         accountEventHandler.HandleAccountSettledEvent(MapEvent(e, tracingService));
                         break;
                     case EventType.AccountClosed:
-                        tracingService.LogTrace($"Handling event of type: ${e.EventType}", podName);
+                        tracingService.LogTrace($"Handling event of type: {e.EventType}", podName);
                         accountEventHandler.HandleAccountClosedEvent(MapEvent(e, tracingService));
                         break;
                     default:
@@ -47,7 +41,7 @@ namespace EventOrdering
                 tracingService.LogError("Payload is empty", "MapEvent");
                 throw new ArgumentException("Payload is empty");
             }
-            return new AccountEvent(DateTime.Now, receivedEvent.Timestamp, receivedEvent.Payload.Id, receivedEvent.Payload.Currency, receivedEvent.Payload.Name);
+            return new AccountEvent(DateTime.Now, receivedEvent.Timestamp, receivedEvent.Payload.Id, receivedEvent.Payload.Currency, receivedEvent.Payload.Name, receivedEvent.EventType);
         }
     }
 }
