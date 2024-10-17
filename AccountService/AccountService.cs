@@ -5,7 +5,7 @@ namespace EventOrdering
 {
     public class AccountService(ITracingService tracingService) : IAccountService
     {
-        protected static ConcurrentDictionary<int, Account> AccountRepository { get; set; } = [];
+        public ConcurrentDictionary<int, Account> AccountRepository { get; set; } = [];
         protected ITracingService TracingService { get; set; } = tracingService;
 
         public void AddAccount(Account account)
